@@ -1,26 +1,12 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import BannerCarousel from "../components/BannerCarousel"; // Import the carousel component
+import BannerCarousel from "../components/BannerCarousel";
+import FeaturedCategories from "../components/FeaturedCategories";
+import SpecialOffers from "../components/SpecialOffers";
+import Testimonials from "../components/Testimonials";
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [featuredCategories, setFeaturedCategories] = useState([
-    { name: "Clothing", image: "https://img.freepik.com/free-photo/interior-clothing-store-with-stylish-merchandise-racks-fashionable-brand-design-casual-wear-modern-boutique-empty-fashion-showroom-shopping-centre-with-elegant-merchandise_482257-65537.jpg" },
-    { name: "Electronics", image: "https://www.shutterstock.com/image-vector/electronics-text-assorted-devices-floating-260nw-2271252449.jpg" },
-    { name: "Home & Garden", image: "https://media.designcafe.com/wp-content/uploads/2020/04/14090945/home-garden-design-images-for-a-long-summer-day.jpg" },
-  ]);
-  const [testimonials, setTestimonials] = useState([
-    {
-      id: 1,
-      text: "Great products! Fast shipping!",
-      author: "John Doe",
-    },
-    {
-      id: 2,
-      text: "Excellent customer service!",
-      author: "Jane Smith",
-    },
-  ]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -43,25 +29,8 @@ function Home() {
       {/* Banner Carousel */}
       <BannerCarousel />
 
-      {/* Featured Categories Section */}
-      <h2 className="text-xl font-bold mt-8 mb-4">Featured Categories</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {featuredCategories.map((category, index) => (
-          <div
-            key={index}
-            className="relative overflow-hidden rounded-lg shadow-md"
-          >
-            <img
-              src={category.image}
-              alt={category.name}
-              className="w-full h-48 object-cover"
-            />
-            <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-              <h3 className="text-lg font-semibold">{category.name}</h3>
-            </div>
-          </div>
-        ))}
-      </div>
+      <SpecialOffers />
+      <FeaturedCategories />
 
       {/* Product Section */}
       <h1 className="text-2xl font-bold mt-8 mb-4">Our Products</h1>
@@ -70,6 +39,8 @@ function Home() {
           <ProductCard key={product._id} product={product} />
         ))}
       </div>
+
+      <Testimonials />
     </div>
   );
 }
