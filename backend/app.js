@@ -6,7 +6,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
 const errorHandler = require('./src/utils/errorHandler');
-
+const cartRoutes = require('./src/routes/cartRoutes')
 dotenv.config();
 
 const app = express();
@@ -25,6 +25,7 @@ app.use(express.json()); // Middleware to parse JSON requests
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes); 
 app.use('/api/orders', orderRoutes);
 
 // Error handling middleware
