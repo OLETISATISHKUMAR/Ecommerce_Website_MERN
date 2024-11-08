@@ -4,25 +4,40 @@ const User = require('../models/User.js');
 const protect = async (req, res, next) => {
   let token;
 
+  // Check if authorization header with Bearer token exists
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
+      // Extract the token from the header
       token = req.headers.authorization.split(' ')[1];
+      
+      // Verify the token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Attach the user to the request, excluding the password field
+      // Fetch the user by ID and exclude the password field
       req.user = await User.findById(decoded.id).select('-password');
+
+      // Check if user was found
+      if (!req.user) {
+        return res.status(401).json({ message: 'User not found, please log in again' });
+      }
+
+      // Move to the next middleware or route handler
       next();
     } catch (error) {
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      console.error('Authorization error:', error);
+      
+      // Handle token-specific errors
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ message: 'Token expired, please log in again' });
+      }
+      
+      // Default error response for token validation failure
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
-  }
-
-  if (!token) {
+  } else {
+    // No token found in the request header
     res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
 
-// Export the protect function with module.exports
-module.exports = {
-  protect,
-};
+module.exports = { protect };

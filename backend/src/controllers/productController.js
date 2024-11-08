@@ -32,8 +32,24 @@ const getProductById = async (req, res) => {
 // Create a new product
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, imageUrl } = req.body;
-    const newProduct = new Product({ name, price, description, imageUrl });
+    const { name, price, description, imageUrl, stock, category, discount, rating } = req.body;
+
+    // Validation
+    if (!name || !price || !description || !imageUrl || !stock || !category) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    const newProduct = new Product({
+      name,
+      price,
+      description,
+      imageUrl,
+      stock,
+      category,
+      discount: discount || 0, // Default to 0 if not provided
+      rating: rating || 0, // Default to 0 if not provided
+    });
+
     const savedProduct = await newProduct.save();
     console.log('Created new product:', savedProduct);
     res.status(201).json(savedProduct);
@@ -46,12 +62,28 @@ const createProduct = async (req, res) => {
 // Update an existing product by ID
 const updateProduct = async (req, res) => {
   try {
-    const { name, price, description, imageUrl } = req.body;
+    const { name, price, description, imageUrl, stock, category, discount, rating } = req.body;
+
+    // Validate required fields
+    if (!name || !price || !description || !imageUrl || !stock || !category) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { name, price, description, imageUrl },
+      {
+        name,
+        price,
+        description,
+        imageUrl,
+        stock,
+        category,
+        discount: discount || 0,
+        rating: rating || 0,
+      },
       { new: true }
     );
+
     if (updatedProduct) {
       console.log(`Updated product with ID: ${req.params.id}`);
       res.json(updatedProduct);
